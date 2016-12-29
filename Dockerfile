@@ -32,13 +32,14 @@ COPY config/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 # backup default default config for NGINX
 RUN cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.bak
 
-RUN cp scripts/delete-nette-cache.sh /home/site/deployments/tools/delete-nette-cache.sh
-
 # copy local default config file for NGINX
 COPY config/nginx/default /etc/nginx/sites-available/default
 
 # php7.0-fpm will not start if this directory does not exist
 RUN mkdir /run/php
+
+COPY scripts/delete-nette-cache.sh /home/site/deployments/tools/delete-nette-cache.sh
+RUN echo "test" >> /home/site/deployments/tools/deleteme.sh
 
 # NGINX ports
 EXPOSE 80
