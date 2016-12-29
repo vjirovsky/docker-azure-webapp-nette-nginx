@@ -28,10 +28,11 @@ RUN apt-get autoclean && apt-get -y autoremove
 
 # copy config file for Supervisor
 COPY config/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY scripts/delete-nette-cache.sh /home/site/deployments/tools/delete-nette-cache.sh
 
 # backup default default config for NGINX
 RUN cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.bak
+
+RUN cp scripts/delete-nette-cache.sh /home/site/deployments/tools/delete-nette-cache.sh
 
 # copy local defualt config file for NGINX
 COPY config/nginx/default /etc/nginx/sites-available/default
