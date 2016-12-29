@@ -19,7 +19,7 @@ As startup Command type only:
 ```
 
 
-![Azure portal](https://raw.githubusercontent.com/username/vjirovsky/docker-azure-webapp-nette-nginx/docs/azure.png)
+![Azure portal - Azure Web App On Linux Docker container](https://raw.githubusercontent.com/vjirovsky/docker-azure-webapp-nette-nginx/master/docs/azure.png)
 
 
 ## Logs
