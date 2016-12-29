@@ -40,6 +40,6 @@ COPY config/nginx/default /etc/nginx/sites-available/default
 RUN mkdir /run/php
 
 # NGINX ports
-EXPOSE 8000
+EXPOSE 80
 
 CMD ["/usr/bin/supervisord"]
