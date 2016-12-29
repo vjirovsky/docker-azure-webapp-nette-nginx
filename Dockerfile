@@ -27,7 +27,7 @@ RUN sed -i -e "s/;daemonize\s*=\s*yes/daemonize = no/g" /etc/php/7.0/fpm/php-fpm
 RUN apt-get autoclean && apt-get -y autoremove
 
 # copy config file for Supervisor
-COPY config/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY config/supervisor/supervisord.conf /etc/
 
 # backup default default config for NGINX
 RUN cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.bak
@@ -38,9 +38,14 @@ COPY config/nginx/default /etc/nginx/sites-available/default
 # php7.0-fpm will not start if this directory does not exist
 RUN mkdir /run/php
 
-COPY scripts/delete-nette-cache.sh /home/site/deployments/tools/
+# debug on localhost
+#RUN mkdir -p /home/site/wwwroot/www
+#RUN mkdir -p /home/LogFiles
+#RUN chmod 2777 -R /home/site/
+#RUN chmod 2777 -R /home/LogFiles/
 
 # NGINX ports
 EXPOSE 80
 
-CMD ["/usr/bin/supervisord"]
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
+
