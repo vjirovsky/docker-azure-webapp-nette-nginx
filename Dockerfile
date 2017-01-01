@@ -37,15 +37,15 @@ COPY config/nginx/default /etc/nginx/sites-available/default
 
 
 # php7.0-fpm will not start if this directory does not exist
-RUN mkdir /run/php
+RUN mkdir /run/php 2> /dev/null
 
-RUN mkdir -p /usr/bin
-RUN mkdir -p /etc/my_init.d
+RUN mkdir -p /usr/bin 2> /dev/null
+RUN mkdir -p /etc/my_init.d 2> /dev/null
 
 
 # debug on localhost
-#RUN mkdir -p /home/site/wwwroot/www
-#RUN mkdir -p /home/LogFiles
+#RUN mkdir -p /home/site/wwwroot/www 2> /dev/null
+#RUN mkdir -p /home/LogFiles 2> /dev/null
 #RUN chmod 2777 -R /home/site/
 #RUN chmod 2777 -R /home/LogFiles/
 
@@ -57,7 +57,7 @@ COPY scripts/install-supervisord.sh /etc/my_init.d/100-supervisord.sh
 # installation of script will be launched after start of docker image (because of mounting /home in Azure)
 COPY scripts/delete-nette-cache.cmd /usr/bin/delete-nette-cache.cmd
 COPY scripts/install-script-delete-nette-cache.sh /etc/my_init.d/300-install-script-delete-nette-cache.sh
-RUN chmod +x /etc/my_init.d/300-install-script-delete-nette-cache.sh 
+#RUN chmod +x /etc/my_init.d/300-install-script-delete-nette-cache.sh 
 
 # NGINX ports
 EXPOSE 80
