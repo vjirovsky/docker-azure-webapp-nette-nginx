@@ -1,4 +1,4 @@
-FROM ubuntu:trusty
+FROM phusion/baseimage
 
 MAINTAINER Vaclav Jirovsky <vjirovsky@vjirovsky.cz>
 #BASED on andreisusanu/nginx-php7 image
@@ -35,8 +35,13 @@ RUN cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.bak
 # copy local default config file for NGINX
 COPY config/nginx/default /etc/nginx/sites-available/default
 
+
 # php7.0-fpm will not start if this directory does not exist
 RUN mkdir /run/php
+
+RUN mkdir -p /usr/bin
+RUN mkdir -p /etc/my_init.d
+
 
 # debug on localhost
 #RUN mkdir -p /home/site/wwwroot/www
@@ -44,8 +49,20 @@ RUN mkdir /run/php
 #RUN chmod 2777 -R /home/site/
 #RUN chmod 2777 -R /home/LogFiles/
 
+
+# copy nette delete cache script (script + installation of script)
+# installation of script will be launched after start of docker image (because of mounting /home in Azure)
+COPY scripts/delete-nette-cache.cmd /usr/bin/delete-nette-cache.cmd
+COPY scripts/install-script-delete-nette-cache.sh /etc/my_init.d/install-script-delete-nette-cache.sh
+RUN chmod +x /etc/my_init.d/install-script-delete-nette-cache.sh 
+
+# supervisor daemon
+COPY scripts/install-supervisord.sh /etc/my_init.d/supervisord.sh
+
 # NGINX ports
 EXPOSE 80
 
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
+CMD ["/sbin/my_init"]
+
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 

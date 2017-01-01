@@ -4,7 +4,8 @@ Docker image for Nette web app, running on Azure Web App on Linux platform
 
 ## What is inside
 - nginx
-- PHP 7
+- PHP 7 (fpm)
+- supervisord
 
 ## Instalation
 
