@@ -49,15 +49,15 @@ RUN mkdir -p /etc/my_init.d
 #RUN chmod 2777 -R /home/site/
 #RUN chmod 2777 -R /home/LogFiles/
 
+# supervisor daemon
+COPY scripts/install-supervisord.sh /etc/my_init.d/100-supervisord.sh
+
 
 # copy nette delete cache script (script + installation of script)
 # installation of script will be launched after start of docker image (because of mounting /home in Azure)
 COPY scripts/delete-nette-cache.cmd /usr/bin/delete-nette-cache.cmd
-COPY scripts/install-script-delete-nette-cache.sh /etc/my_init.d/install-script-delete-nette-cache.sh
-RUN chmod +x /etc/my_init.d/install-script-delete-nette-cache.sh 
-
-# supervisor daemon
-COPY scripts/install-supervisord.sh /etc/my_init.d/supervisord.sh
+COPY scripts/install-script-delete-nette-cache.sh /etc/my_init.d/300-install-script-delete-nette-cache.sh
+RUN chmod +x /etc/my_init.d/300-install-script-delete-nette-cache.sh 
 
 # NGINX ports
 EXPOSE 80
