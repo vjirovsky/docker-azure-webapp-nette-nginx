@@ -1,27 +1,70 @@
 # Nette on Azure Web App On Linux
 
-Docker image for Nette web app, running on Azure Web App on Linux platform 
+Docker image for Nette web app, running on Azure Web App on Linux platform.
 
 ## What is inside
 - nginx
 - PHP 7 (fpm)
-- supervisord
+- scripts for cleaning cache
 
 ## Instalation
 
-As image and optional tag (eg 'image:tag') type: 
+As <em>Container type</em> select <em>Docker Compose</em>, as <em>Registry source</em> select <em>Docker Hub</em>.
+
+### Config <small>(paste this following config in textarea on Azure Portal)</small>
+
 ```
-vjirovsky/azure-webapp-nette-nginx
+version: '3.3'
+services:
+  nginx:
+    image: vjirovsky/azure-nette-nginx:latest
+
+    restart: always
+
+    ports:
+      - 8000:80
+
+    volumes:
+      #following line is used for debugging at local computer
+      #- ./var_www:/var/www/html
+      #following lines are used in case of WEBSITES_ENABLE_APP_SERVICE_STORAGE = true
+      - ${WEBAPP_STORAGE_HOME}/site/wwwroot:/var/www/html
+      - ${WEBAPP_STORAGE_HOME}/LogFiles:/var/log
+    logging:
+        driver: "json-file"
+        options:
+            max-file: "5"
+            max-size: "5m"
+
+    depends_on:
+      - fpm
+  fpm:
+    image: vjirovsky/azure-nette-fpm:latest
+
+    restart: always
+
+    ports:
+      - 9000:9000
+
+    volumes:
+      #following line is used for debugging at local computer
+      #- ./var_www:/var/www/html
+      #following lines are used in case of WEBSITES_ENABLE_APP_SERVICE_STORAGE = true
+      - ${WEBAPP_STORAGE_HOME}/site/wwwroot:/var/www/html
+      - ${WEBAPP_STORAGE_HOME}/LogFiles:/var/log
+    logging:
+        driver: "json-file"
+        options:
+            max-file: "5"
+            max-size: "5m"
+
 ```
 
-As startup Command type only:
-```
--P
-```
+2. Ensure that folder /home/LogFiles/nginx exists
+3. Set up application variable <em>WEBSITES_ENABLE_APP_SERVICE_STORAGE</em> to <em>true</em>, if you want to share /home/ dir (incl. temp && log folders) between nodes; in case you do not want to share dirs, delete <em>volumes</em> section.
 
-![Azure portal - Azure Web App On Linux Docker container](https://raw.githubusercontent.com/vjirovsky/docker-azure-webapp-nette-nginx/master/docs/azure-docker.png)
 
-## Usage example
+## Example usage
 1. your Nette web app should be in git repository
 2. set up Local git deployment in Azure Portal under _Deployment options_
 3. create your git credentials in Azure Portal under _Deployment credentials_
@@ -41,10 +84,4 @@ Nginx generates two logs
 
 - access log - placed in /home/LogFiles/docker/nginx.access.log
 - error log - placed in /home/LogFiles/docker/nginx.error.log
-
-
-## Contribution
-
-
-based on Docker [image andreisusanu/docker-nginx-php7](andreisusanu/docker-nginx-php7)
 
