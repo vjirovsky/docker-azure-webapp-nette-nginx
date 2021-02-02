@@ -2,6 +2,7 @@ version: '3.3'
 services:
   nginx:
     image: vjirovsky/azure-nette-nginx:latest
+    #build: ./src/nginx
 
     restart: always
 
@@ -24,6 +25,7 @@ services:
       - fpm
   fpm:
     image: vjirovsky/azure-nette-fpm:latest
+    #build: ./src/php-fpm
 
     restart: always
 
@@ -41,4 +43,19 @@ services:
         options:
             max-file: "5"
             max-size: "5m"
+    depends_on:
+      - smtp
 
+  smtp:
+    image: mwader/postfix-relay
+    restart: always
+    environment:
+      - POSTFIX_myhostname=YOURDOMAIN.COM
+      - OPENDKIM_DOMAINS==YOURDOMAIN.COM
+
+    mem_limit: "25000000"
+    logging:
+        driver: "json-file"
+        options:
+            max-file: "5"
+            max-size: "5m"

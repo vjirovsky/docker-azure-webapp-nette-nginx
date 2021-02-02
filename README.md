@@ -18,6 +18,7 @@ version: '3.3'
 services:
   nginx:
     image: vjirovsky/azure-nette-nginx:latest
+    #build: ./src/nginx
 
     restart: always
 
@@ -27,7 +28,7 @@ services:
     volumes:
       #following line is used for debugging at local computer
       #- ./var_www:/var/www/html
-      #following lines are used in case of WEBSITES_ENABLE_APP_SERVICE_STORAGE = true
+      #following lines are used for live app on Azure Web App, in case of WEBSITES_ENABLE_APP_SERVICE_STORAGE = true
       - ${WEBAPP_STORAGE_HOME}/site/wwwroot:/var/www/html
       - ${WEBAPP_STORAGE_HOME}/LogFiles:/var/log
     logging:
@@ -40,6 +41,7 @@ services:
       - fpm
   fpm:
     image: vjirovsky/azure-nette-fpm:latest
+    #build: ./src/php-fpm
 
     restart: always
 
@@ -49,7 +51,7 @@ services:
     volumes:
       #following line is used for debugging at local computer
       #- ./var_www:/var/www/html
-      #following lines are used in case of WEBSITES_ENABLE_APP_SERVICE_STORAGE = true
+      #following lines are used for live app on Azure Web App, in case of WEBSITES_ENABLE_APP_SERVICE_STORAGE = true
       - ${WEBAPP_STORAGE_HOME}/site/wwwroot:/var/www/html
       - ${WEBAPP_STORAGE_HOME}/LogFiles:/var/log
     logging:
@@ -57,6 +59,22 @@ services:
         options:
             max-file: "5"
             max-size: "5m"
+    depends_on:
+      - smtp
+
+  smtp:
+    image: mwader/postfix-relay
+    restart: always
+    environment:
+      - POSTFIX_myhostname=YOURDOMAIN.COM
+      - OPENDKIM_DOMAINS==YOURDOMAIN.COM
+
+    mem_limit: "25000000"
+    logging:
+        driver: "json-file"
+        options:
+            max-file: "5"
+            max-size: "5m" 
 
 ```
 

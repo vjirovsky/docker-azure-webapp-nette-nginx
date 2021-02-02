@@ -10,4 +10,6 @@ EXPOSE 80
 # installation of script will be launched after start of docker image (because of mounting /home in Azure)
 COPY scripts/delete-nette-cache.cmd /usr/bin/delete-nette-cache.cmd
 COPY scripts/install-script-delete-nette-cache.sh /etc/my_init.d/300-install-script-delete-nette-cache.sh
+
+RUN mkdir -p /var/log/nginx
 #RUN chmod +x /etc/my_init.d/300-install-script-delete-nette-cache.sh 

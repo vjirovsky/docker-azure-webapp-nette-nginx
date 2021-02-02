@@ -1,0 +1,16 @@
+defaults
+auth           off
+tls            off
+tls_trust_file /etc/ssl/certs/ca-certificates.crt
+syslog         on
+auto_from      on
+
+# Microservice SMTP
+account        microsmtp
+host           smtp
+auth           off
+port           25
+
+# Set a default account
+account default : microsmtp
+aliases        /etc/aliases

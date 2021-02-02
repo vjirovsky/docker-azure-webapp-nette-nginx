@@ -88,7 +88,15 @@ RUN apt-get update && apt-get install -y less
 #install redis support
 RUN pecl install redis && docker-php-ext-enable redis
 
+#install mail support
+RUN apt-get update && apt-get install -y \
+    ca-certificates \
+    msmtp && \
+    echo  'sendmail_path = "/usr/bin/msmtp -t"' > /usr/local/etc/php/conf.d/mail.ini
 
+COPY msmtprc.txt /etc/msmtprc
+
+COPY smtp.ini /usr/local/etc/php/conf.d
 COPY memory.ini /usr/local/etc/php/conf.d
 
 #run auto-wp update
