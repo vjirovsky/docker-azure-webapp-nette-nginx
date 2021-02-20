@@ -13,7 +13,7 @@ As <em>Container type</em> select <em>Docker Compose</em>, as <em>Registry sourc
 
 ### Config <small>(paste this following config in textarea on Azure Portal)</small>
 
-```
+```docker
 version: '3.3'
 services:
   nginx:
@@ -96,6 +96,18 @@ services:
 
 ## Debugging
 Because Web apps on Linux are running on Microsoft's [Project Kudu](https://github.com/projectkudu/kudu), you can use [FTP connection](https://github.com/projectkudu/kudu/wiki/Accessing-files-via-ftp) or [Kudu console](https://github.com/projectkudu/kudu/wiki/Kudu-console) (limited remote Bash console) to connect to your app.
+
+### Nette application
+
+For debugging purposes I do recommend to add following code inside <em>bootstrap.php</em>:
+
+```php
+if (getenv('NETTE_DEBUG', true)) {
+  $configurator->setDebugMode(TRUE);
+}
+```
+
+Thanks to this code you can enable/disable Tracy debugging by Application settings (in Azure Portal) value of <em>NETTE_DEBUG</em> parameter (environment value).
 
 ### Logs
 Nginx generates two logs
