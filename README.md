@@ -11,9 +11,9 @@ Docker image for Nette web app, running on Azure Web App on Linux platform.
 
 As <em>Container type</em> select <em>Docker Compose</em>, as <em>Registry source</em> select <em>Docker Hub</em>.
 
-### Config <small>(paste this following config in textarea on Azure Portal)</small>
+### Config <small>(paste following config in textarea on Azure Portal)</small>
 
-```docker
+```dockerfile
 version: '3.3'
 services:
   nginx:
