@@ -67,7 +67,7 @@ services:
     restart: always
     environment:
       - POSTFIX_myhostname=YOURDOMAIN.COM
-      - OPENDKIM_DOMAINS==YOURDOMAIN.COM
+      - OPENDKIM_DOMAINS=YOURDOMAIN.COM
 
     mem_limit: "25000000"
     logging:
